@@ -7,7 +7,7 @@ import { useUiStore } from '../../store/ui';
 
 export function MainGoalCard() {
   const stats = useStats();
-  const mainGoal = useTracker((s) => s.profile.mainGoal);
+  const primaryGoal = useTracker((s) => s.profile.primaryGoal);
   const openGoalModal = useUiStore((s) => s.openGoalModal);
   const { percent } = stats.daily(stats.today);
 
@@ -22,7 +22,7 @@ export function MainGoalCard() {
         <div className="min-w-0 flex-1">
           <p className="text-[11px] text-sub sm:text-xs">Main Goal</p>
           <h2 id="main-goal" className="mb-3 text-lg font-bold leading-tight sm:text-3xl">
-            {mainGoal}
+            {primaryGoal}
           </h2>
           <span className="mb-3 inline-block rounded-full bg-accent px-3 py-0.5 text-[11px] font-semibold text-bg sm:text-xs">
             Today’s Goal

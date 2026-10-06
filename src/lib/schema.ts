@@ -62,11 +62,7 @@ export const formValuesToGoalInput = (v: GoalFormValues): Omit<Goal, 'id' | 'cre
 
 /** Schemas for single-field edits on the Mine page. */
 export const profileSchemas = {
-  fullName: z.string().trim().min(1, 'Name is required').max(60),
-  email: z.string().trim().email('Enter a valid email'),
+  name: z.string().trim().min(1, 'Name is required').max(60),
   dateOfBirth: z.string().refine((v) => isValidKey(v) && v <= todayKey(), 'Enter a valid date of birth'),
-  gender: z.string().min(1, 'Select an option'),
-  heightCm: z.coerce.number({ invalid_type_error: 'Enter a number' }).min(50, 'Too low').max(260, 'Too high'),
-  weightKg: z.coerce.number({ invalid_type_error: 'Enter a number' }).min(20, 'Too low').max(400, 'Too high'),
-  mainGoal: z.string().trim().min(1, 'Main goal is required').max(60),
+  primaryGoal: z.string().trim().min(1, 'Primary goal is required').max(60),
 };

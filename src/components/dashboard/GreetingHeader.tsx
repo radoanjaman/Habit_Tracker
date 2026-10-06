@@ -12,7 +12,7 @@ const greeting = (): string => {
 };
 
 export function GreetingHeader() {
-  const name = useTracker((s) => s.profile.fullName);
+  const name = useTracker((s) => s.profile.name);
   const avatarUrl = useTracker((s) => s.profile.avatarUrl);
   return (
     <header className="mb-6 flex items-center justify-between">

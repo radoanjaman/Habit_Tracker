@@ -8,13 +8,18 @@ import { toKey } from './dates';
  * ------------------------------------------------------------------ */
 
 export const defaultProfile: UserProfile = {
-  fullName: '',
-  email: '',
+  id: 'demo-user',
+  name: '',
   dateOfBirth: '2004-01-15',
-  gender: 'Male',
-  heightCm: 178,
-  weightKg: 68,
-  mainGoal: 'Build a Healthy Lifestyle',
+  primaryGoal: 'Build a Healthy Lifestyle',
+  onboardingCompleted: false,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  xp: 0,
+  level: 1,
+  streak: 0,
+  longestStreak: 0,
+  achievementsUnlocked: [],
 };
 
 export const defaultSettings: AppSettings = {
@@ -61,7 +66,7 @@ export function createSeedData(now: Date = new Date()): PersistedData {
 }
 
 export const createEmptyData = (): PersistedData => ({
-  profile: { ...defaultProfile, fullName: '', email: '', dateOfBirth: '', gender: '', heightCm: 0, weightKg: 0, mainGoal: 'My main goal' },
+  profile: { ...defaultProfile, name: '', dateOfBirth: '', primaryGoal: 'My main goal', onboardingCompleted: false },
   goals: [],
   completions: [],
   settings: { ...defaultSettings },

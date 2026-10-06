@@ -34,15 +34,64 @@ export interface GoalCompletion {
 }
 
 export interface UserProfile {
-  fullName: string;
-  email: string;
-  dateOfBirth: string;
-  gender: string;
-  heightCm: number;
-  weightKg: number;
-  mainGoal: string;
-  /** Resized image as a data URL (stored locally). */
+  id: string;
+  name: string;
+  age?: number;
+  dateOfBirth?: string;
+
+  height?: {
+    value: number;
+    unit: 'cm' | 'ft';
+  };
+
+  weight?: {
+    value: number;
+    unit: 'kg' | 'lb';
+  };
+
+  primaryGoal?: string;
+
+  target?: {
+    type: string;
+    value?: number;
+    unit?: string;
+  };
+
+  preferredTime?: 'morning' | 'afternoon' | 'evening' | 'flexible';
+
+  daysPerWeek?: number;
+
+  selectedHabits?: string[];
+
+  onboardingCompleted: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+  
   avatarUrl?: string;
+
+  xp: number;
+  level: number;
+  streak: number;
+  longestStreak: number;
+  achievementsUnlocked: string[];
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  category: 'goal' | 'streak' | 'weekly' | 'milestone' | 'special';
+  icon: string;
+  requirement: {
+    type: string;
+    value?: number;
+    title?: string;
+    category?: string;
+  };
+  xpReward: number;
+  unlocked?: boolean;
+  unlockedAt?: string;
 }
 
 export type ReminderMode = 'Daily' | 'Weekdays' | 'Off';

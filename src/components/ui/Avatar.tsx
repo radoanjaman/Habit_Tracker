@@ -1,20 +1,15 @@
 import { cn } from '../../lib/cn';
 
+import { getAvatarColor, getInitials } from '../../lib/avatar';
+
 interface Props {
   name: string;
+  userId?: string;
   src?: string;
   className?: string;
 }
 
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join('') || '?';
-
-export function Avatar({ name, src, className }: Props) {
+export function Avatar({ name, userId, src, className }: Props) {
   if (src) {
     return (
       <img
@@ -28,16 +23,19 @@ export function Avatar({ name, src, className }: Props) {
     );
   }
 
+  const bgColor = userId ? getAvatarColor(userId) : 'bg-surface2';
+  const textColor = userId ? 'text-white' : 'text-accent';
+
   return (
     <div
       role="img"
       aria-label={`Avatar of ${name}`}
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full border-2 border-accent/70 bg-surface2 font-semibold text-accent',
+        `flex shrink-0 items-center justify-center rounded-full border-2 border-accent/70 font-semibold ${bgColor} ${textColor}`,
         className ?? 'h-12 w-12 text-sm',
       )}
     >
-      {initials(name)}
+      {getInitials(name)}
     </div>
   );
 }

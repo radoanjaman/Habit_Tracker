@@ -4,13 +4,13 @@ import { Avatar } from '../ui/Avatar';
 
 interface Props {
   name: string;
-  email: string;
+  userId?: string;
   avatarUrl?: string;
   onPhotoChange?: (url: string) => void;
   onEdit: () => void;
 }
 
-export function ProfileHeader({ name, email, avatarUrl, onPhotoChange, onEdit }: Props) {
+export function ProfileHeader({ name, userId, avatarUrl, onPhotoChange, onEdit }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ export function ProfileHeader({ name, email, avatarUrl, onPhotoChange, onEdit }:
   return (
     <div className="flex w-full items-center gap-4 rounded-card border border-line bg-card p-4 shadow-soft transition-colors duration-200 hover:border-accent/40 sm:p-6">
       <div className="relative shrink-0">
-        <Avatar name={name || 'radoan'} src={avatarUrl} className="h-16 w-16 text-xl" />
+        <Avatar name={name || 'radoan'} userId={userId} src={avatarUrl} className="h-16 w-16 text-xl" />
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
@@ -56,7 +56,6 @@ export function ProfileHeader({ name, email, avatarUrl, onPhotoChange, onEdit }:
       >
         <div className="min-w-0">
           <p className="truncate text-lg font-semibold">{name || 'radoan'}</p>
-          <p className="truncate text-sm text-sub">{email || 'radoan.jaman@example.com'}</p>
         </div>
         <ChevronRight size={18} className="text-mute" aria-hidden />
       </button>

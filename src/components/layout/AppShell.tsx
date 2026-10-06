@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { TriangleAlert } from 'lucide-react';
 import { BottomNavigation } from './BottomNavigation';
+import { ToastContainer } from '../notifications/Toast';
 import { AddGoalModal } from '../goals/AddGoalModal';
 import { useUiStore } from '../../store/ui';
 
@@ -20,6 +21,9 @@ export function AppShell() {
           <TriangleAlert size={14} aria-hidden /> Changes can’t be saved in this browser (storage unavailable).
         </div>
       )}
+      
+      <ToastContainer />
+
       <main className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col px-4 pb-32 pt-6 sm:px-8 sm:pt-10">
         <div className="flex-1">
           <Outlet />

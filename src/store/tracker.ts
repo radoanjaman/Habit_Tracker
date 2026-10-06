@@ -13,6 +13,8 @@ import {
   makeCtx,
 } from '../lib/stats';
 import { monthDays } from '../lib/dates';
+import { achievementService } from '../services/achievementService';
+import { useUiStore } from './ui';
 
 export type NewGoal = Omit<Goal, 'id' | 'createdAt'>;
 
@@ -24,6 +26,7 @@ interface TrackerState extends PersistedData {
   addGoal: (input: NewGoal) => Goal;
   updateGoal: (id: string, patch: Partial<NewGoal>) => void;
   deleteGoal: (id: string) => void;
+  clearGoals: () => void;
   toggleGoalCompletion: (goalId: string, date: string) => void;
   setSelectedDate: (date: string) => void;
   setSelectedMonth: (month: string) => void;
@@ -73,7 +76,7 @@ export const useTracker = create<TrackerState>()(
     (set, get) => {
       const ctx = () => makeCtx(get().goals, get().completions);
       return {
-        ...createSeedData(),
+        ...createEmptyData(),
         ...initialSelection(),
 
         addGoal: (input) => {
@@ -88,15 +91,68 @@ export const useTracker = create<TrackerState>()(
             goals: s.goals.filter((g) => g.id !== id),
             completions: s.completions.filter((c) => c.goalId !== id),
           })),
+        clearGoals: () => set({ goals: [], completions: [] }),
         toggleGoalCompletion: (goalId, date) =>
           set((s) => {
             const existing = s.completions.find((c) => c.goalId === goalId && c.date === date);
+            let completions = s.completions;
+            let wasCompleted = false;
+            
             if (!existing) {
-              return { completions: [...s.completions, { id: `${goalId}_${date}`, goalId, date, completed: true }] };
+              completions = [...s.completions, { id: `${goalId}_${date}`, goalId, date, completed: true }];
+              wasCompleted = true;
+            } else {
+              completions = s.completions.map((c) => (c === existing ? { ...c, completed: !c.completed } : c));
+              wasCompleted = !existing.completed;
             }
-            return {
-              completions: s.completions.map((c) => (c === existing ? { ...c, completed: !c.completed } : c)),
+
+            // Simple stats for achievement checks
+            const streak = getStreak(makeCtx(s.goals, completions), todayKey());
+            const totalCompleted = completions.filter(c => c.completed).length;
+            
+            const stats = {
+              totalCompleted,
+              streak: streak.current,
+              perfectWeeks: 0,
+              strongWeeks: 0,
+              consistentWeeks: 0,
+              activeDays: new Set(completions.filter(c => c.completed).map(c => c.date)).size,
+              activeGoals30Days: 0,
+              morningGoals: 0,
+              specificGoalCounts: {},
+              specificCategoryCounts: {}
             };
+
+            const { unlocked, updatedProfile } = achievementService.checkAchievements(s.profile, stats);
+            const { showToast } = useUiStore.getState();
+
+            if (unlocked.length > 0) {
+              unlocked.forEach(ach => {
+                showToast({
+                  type: 'achievement',
+                  title: 'Achievement unlocked',
+                  message: ach.name,
+                  xp: ach.xpReward
+                });
+              });
+            }
+
+            if (wasCompleted) {
+              const goalTitle = s.goals.find(g => g.id === goalId)?.title || 'Goal completed';
+              showToast({
+                type: 'goal-completed',
+                title: 'Goal completed',
+                message: goalTitle,
+                xp: 10
+              });
+              // Award 10 XP for completion
+              return { 
+                completions,
+                profile: achievementService.awardXP(updatedProfile, 10)
+              };
+            }
+
+            return { completions, profile: updatedProfile };
           }),
 
         setSelectedDate: (date) =>

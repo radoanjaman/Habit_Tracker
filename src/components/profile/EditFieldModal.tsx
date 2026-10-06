@@ -70,8 +70,7 @@ function FieldForm({ field, profile, onSave, onClose }: Props & { field: FieldCo
             autoFocus 
             className={inputClass} 
             placeholder={
-              field.key === 'fullName' ? 'radoan' : 
-              field.key === 'email' ? 'radoan.jaman@example.com' : 
+              field.key === 'name' ? 'radoan' : 
               ''
             }
             {...register('value')} 
